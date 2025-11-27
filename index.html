@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YONO Bank Portal</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a9386f, #a9386f);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 380px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 0.9s ease;
+        }
+
+        h2 {
+            text-align: center;
+            color: #5b0e8c;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 92%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            border-color: #5b0e8c;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #5b0e8c;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #7c15c4;
+            transform: scale(1.02);
+        }
+
+        .switch-link {
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+            color: #d32f96;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+        <h2>Login</h2>
+
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Enter 8-15 character username">
+
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password">
+
+        <button onclick="validateLogin()">Login</button>
+
+        <span class="switch-link" onclick="showRegister()">
+            New User? Create an Account
+        </span>
+    </div>
+
+
+    <!-- REGISTRATION PAGE -->
+    <div id="registerPage" class="hidden">
+        <h2>Register</h2>
+
+        <label>Account Number *</label>
+        <input type="text" id="acc" placeholder="Enter account number">
+
+        <label>Username *</label>
+        <input type="text" id="regUser" placeholder="8–15 characters">
+
+        <label>Password *</label>
+        <input type="password" id="regPass" placeholder="Min 8 chars, 1 number & 1 special char">
+
+        <label>Phone *</label>
+        <input type="text" id="regPhone" placeholder="10-digit phone number">
+
+        <label>Email</label>
+        <input type="text" id="regEmail" placeholder="example@mail.com (optional)">
+
+        <label>Country *</label>
+        <select id="country">
+            <option value="">Select Country</option>
+            <option>India</option>
+            <option>USA</option>
+            <option>UK</option>
+            <option>Australia</option>
+            <option>Canada</option>
+        </select>
+
+        <button onclick="registerUser()">Register</button>
+
+        <span class="switch-link" onclick="showLogin()">
+            Already have an account? Login
+        </span>
+    </div>
+
+</div>
+
+
+<script>
+
+// Switch Pages
+function showRegister() {
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("registerPage").classList.remove("hidden");
+}
+
+function showLogin() {
+    document.getElementById("registerPage").classList.add("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+}
+
+
+// LOGIN VALIDATION
+function validateLogin() {
+    let user = document.getElementById("loginUser").value.trim();
+    let pass = document.getElementById("loginPass").value;
+
+    if (user.length < 8 || user.length > 15) {
+        alert("❌ Username must be 8–15 characters!");
+        return;
+    }
+
+    let upper = /[A-Z]/.test(pass);
+    let number = /[0-9]/.test(pass);
+    let symbol = /[^A-Za-z0-9]/.test(pass);
+    let minlen = pass.length >= 8;
+
+    if (!(upper && number && symbol && minlen)) {
+        alert("❌ Invalid Password!\nMust include:\n✔ Uppercase\n✔ Number\n✔ Symbol\n✔ Min 8 chars");
+        return;
+    }
+
+    alert("✅ Login Successful!");
+}
+
+
+// REGISTRATION VALIDATION
+function registerUser() {
+
+    let acc = document.getElementById("acc").value.trim();
+    let user = document.getElementById("regUser").value.trim();
+    let pass = document.getElementById("regPass").value.trim();
+    let phone = document.getElementById("regPhone").value.trim();
+    let email = document.getElementById("regEmail").value.trim();
+    let country = document.getElementById("country").value;
+
+    if (!acc || !user || !pass || !phone || !country) {
+        alert("❌ All required fields must be filled!");
+        return;
+    }
+
+    if (!/^[0-9]{6,20}$/.test(acc)) {
+        alert("❌ Invalid account number!");
+        return;
+    }
+
+    if (user.length < 8 || user.length > 15) {
+        alert("❌ Username must be 8–15 characters!");
+        return;
+    }
+
+    let validPass =
+        pass.length >= 8 &&
+        /[0-9]/.test(pass) &&
+        /[^A-Za-z0-9]/.test(pass);
+
+    if (!validPass) {
+        alert("❌ Password must contain:\n• Min 8 characters\n• 1 number\n• 1 special character");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(phone)) {
+        alert("❌ Phone number must be exactly 10 digits!");
+        return;
+    }
+
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+        alert("❌ Invalid email format!");
+        return;
+    }
+
+    alert("✅ Registration Successful!");
+}
+
+</script>
+
+</body>
+</html>
